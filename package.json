@@ -2,7 +2,7 @@
   "name": "m8",
   "version": "1.0.0",
   "description": "",
-  "main": "truffle-config.js",
+  "main": "next.js",
   "directories": {
     "test": "test"
   },
