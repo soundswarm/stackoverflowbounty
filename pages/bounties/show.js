@@ -6,6 +6,7 @@ import { Link } from "../../routes";
 import { Button } from "semantic-ui-react";
 import Layout from "../../components/Layout";
 import web3 from "../../ethereum/web3";
+
 export default class Show extends Component {
   state = { loading: false };
   static async getInitialProps(props) {
@@ -66,12 +67,12 @@ export default class Show extends Component {
 
         <h3>
           To claim this bounty you must have an approved answer for this
-          question and you must have your ethereum address posted in the
-          location section of your stackexchange profile. The bounty will be
-          sent to the address in your Profile location. You must be signed into
-          metamask to claim the bounty. You will have to spend your hard-earned
-          Rinkeby eth on 3 transactions which use Oraclize. Then you will
-          receive the bounty.
+          stackoverflow question and you must have your ethereum address posted
+          in the location section of your stackexchange profile. The bounty will
+          be sent to the address in your profile location. You must be signed
+          into metamask to claim the bounty. You will have to spend your
+          hard-earned Rinkeby eth on 3 transactions which use Oraclize. Then you
+          will receive the bounty.
         </h3>
         <Button onClick={this.claimBounty} loading={this.state.loading}>
           Claim Bounty

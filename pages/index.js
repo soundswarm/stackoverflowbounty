@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import m8BountyFactory from "../ethereum/m8Factory.js";
 import { Link } from "../routes";
 import Layout from "../components/Layout";
-import { Button } from "semantic-ui-react";
+import { Button, Card } from "semantic-ui-react";
 
 class Index extends Component {
   static async getInitialProps() {
@@ -16,9 +16,13 @@ class Index extends Component {
           <Button floated="right">Create A Bounty</Button>
         </Link>
 
-        <h3>Open Bounties</h3>
-        {this.props.bounties.map(bounty => {
-          return <Link route={`/bounties/${bounty}`}>{bounty}</Link>;
+        <h3>Bounties on Stack Overflow Questions</h3>
+        {this.props.bounties.map((bounty, i) => {
+          return (
+            <Card fluid key={i}>
+              <Link route={`/bounties/${bounty}`}>{bounty}</Link>
+            </Card>
+          );
         })}
       </Layout>
     );
