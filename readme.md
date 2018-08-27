@@ -8,5 +8,5 @@ to run in dev environment
 ```npm install```
 ```npm run dev```
 
-for oraclize with tests
+to enable oraclize with tests:
 ethereum-bridge -H localhost:9545 -a 1
