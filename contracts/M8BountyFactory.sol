@@ -13,9 +13,9 @@ contract M8BountyFactory is usingOraclize{
     M8Coin public m8;
     bool private stopped = false;
     address public owner;
-    function  M8BountyFactory () public {
+    function  M8BountyFactory (address _m8Address) public  {
         owner = msg.sender;
-        m8 = new M8Coin();
+        m8 = M8Coin(_m8Address);
         m8.mint(this, 100);
     }
     struct DeployedBounty {
@@ -37,6 +37,17 @@ contract M8BountyFactory is usingOraclize{
     event QuestionKeyEvent(bytes32);
 
     modifier stopInEmergency { if (!stopped) _; }
+
+    modifier isAdmin() {
+        require(msg.sender == owner);
+        _;
+    }
+
+    function toggleContractActive() isAdmin public {
+        // You can add an additional modifier that restricts stopping a contract to be based on another action, such as a vote of users
+        stopped = !stopped;
+    }
+
 
     // function checks to see if the question exists on stackexchange and should be called before creating bounty.
    function isValidQuestion(uint _questionId, string _site) public payable{
@@ -71,8 +82,9 @@ contract M8BountyFactory is usingOraclize{
 
     function createBounty(uint _questionId, string _site)  stopInEmergency public payable{
         require(_questionId != 0 && bytes(_site).length != 0);
+        /* optional verification: */
         // require question doesn't already exist.
-        bytes32 questionKey = makeQuestionKey(_questionId, _site);
+        /* bytes32 questionKey = makeQuestionKey(_questionId, _site); */
         // require(validQuestions[questionKey] == true);
 
         address newBounty = new M8Bounty(_questionId, _site, m8);

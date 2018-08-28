@@ -34,4 +34,6 @@ to test:
 
 You must enable oraclize with tests:
 You must install ethereum-bridge: ```npm i --save ethereum-bridge -g```
-start it after truffle's ganache is running. ethereum-bridge -H localhost:8545 -a 1
+start it after truffle's ganache is running. ethereum-bridge -H localhost:9545 -a 1
+
+be aware of a bug in truffle test: https://github.com/trufflesuite/truffle/issues/1057
