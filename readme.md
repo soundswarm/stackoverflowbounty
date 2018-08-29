@@ -31,6 +31,7 @@ to run in dev environment on Rinkeby:
 
 to test:
 ```truffle develop```
+truffle should be running on port 9545
 
 You must enable oraclize with tests:
 You must install ethereum-bridge: ```npm i --save ethereum-bridge -g```
