@@ -13,10 +13,10 @@ contract M8BountyFactory is usingOraclize{
     M8Coin public m8;
     bool private stopped = false;
     address public owner;
-    function  M8BountyFactory (address _m8Address) public  {
+    function  M8BountyFactory () public  {
         owner = msg.sender;
-        m8 = M8Coin(_m8Address);
-        m8.mint(this, 100);
+        m8 = new M8Coin();
+
     }
     struct DeployedBounty {
         uint questionId;
@@ -34,7 +34,6 @@ contract M8BountyFactory is usingOraclize{
     mapping(bytes32 => QueryInfo) queryInfo;
 
     event BountyCreated(uint queryID, string site, address bountyAddress);
-    event QuestionKeyEvent(bytes32);
 
     modifier stopInEmergency { if (!stopped) _; }
 
@@ -42,15 +41,17 @@ contract M8BountyFactory is usingOraclize{
         require(msg.sender == owner);
         _;
     }
-
+    function mintM8() isAdmin public {
+        m8.mint(this, 100);
+    }
     function toggleContractActive() isAdmin public {
         // You can add an additional modifier that restricts stopping a contract to be based on another action, such as a vote of users
         stopped = !stopped;
     }
 
-
+    /* OPTIONAL FUNCTIONS NOT NEEDED FOR V1*/
     // function checks to see if the question exists on stackexchange and should be called before creating bounty.
-   function isValidQuestion(uint _questionId, string _site) public payable{
+   /* function isValidQuestion(uint _questionId, string _site) public payable{
         require(_questionId != 0 && bytes(_site).length != 0);
 
         string memory URL = strConcat(
@@ -76,11 +77,10 @@ contract M8BountyFactory is usingOraclize{
         if (parsedResult > 0) {
             bytes32 questionKey = makeQuestionKey(questionId, site);
             validQuestions[questionKey] = true;
-            QuestionKeyEvent(questionKey);
         }
-    }
+    } */
 
-    function createBounty(uint _questionId, string _site)  stopInEmergency public payable{
+    function createBounty(uint _questionId, string _site)  stopInEmergency public {
         require(_questionId != 0 && bytes(_site).length != 0);
         /* optional verification: */
         // require question doesn't already exist.

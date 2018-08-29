@@ -1,40 +1,45 @@
 var M8Coin = artifacts.require("M8Coin");
-var Factory = artifacts.require("M8BountyFactory");
+var M8BountyFactory = artifacts.require("M8BountyFactory");
+var M8Bounty = artifacts.require("M8Bounty");
 
-let m8Coings;
+let m8Address;
 let m8Factory;
-// function assertEvent(contract, filter) {
-//   return new Promise((resolve, reject) => {
-//     var event = contract[filter.event]();
-//     event.watch();
-//     event.get((error, logs) => {
-//       console.log("LOGS", logs);
-//       // var log = _.filter(logs, filter);
-//       // if (log) {
-//       //     resolve(log);
-//       // } else {
-//       //     throw Error("Failed to find filtered event for " + filter.event);
-//       // }
-//     });
-//     event.stopWatching();
-//   });
-// }
+let bounty;
 
 contract("M8", async accounts => {
-  beforeEach("it should deploy the coin and factory", async () => {
-    console.log('M8COINmmm', m8Coin)
-
-    m8Coin = await M8Coin.deployed()
-    console.log('M8COINmmm', m8Coin)
-    // m8Factory = await Factory.deployed()
-    // console.log('M8FACTORY', m8Factory)
-
+  beforeEach("it should deploy the factory", async () => {
+    m8Factory = await M8BountyFactory.deployed();
+    m8Address = await m8Factory.m8();
+    m8 = await M8Coin.at(m8Address);
   });
 
-  // it("is should delpoy coin and factory", async () => {
-  //   // assert.ok(m8Coin.address)
-  //   // assert.ok(m8Factory.address);
-  //   // const factoryBalance= await  m8Coin.balanceOf(m8Factory.address)
-  //   // console.log('FACTORYBALANCE', factoryBalance)
-  // });
+  it("is should delpoy factory", async () => {
+    assert.ok(m8Factory.address);
+  });
+
+  it("is should delpoy coin in factory constructor", async () => {
+    assert.ok(m8Address);
+  });
+
+  it("factory should have a balance after it mints m8 token", async () => {
+    await m8Factory.mintM8();
+    const factoryBalance = await m8.balanceOf(m8Factory.address);
+    assert.equal(factoryBalance, 100);
+  });
+
+  it("factory should create a bounty", async () => {
+    await m8Factory.createBounty(3162032, "stackoverflow");
+    const bountyAddress = await m8Factory.deployedBounties(0);
+    bounty = M8Bounty.at(bountyAddress);
+    assert.ok(bountyAddress);
+  });
+
+  it("bounty get accepted answer Id", async () => {
+    await bounty.getAcceptedAnswerId({
+      from: accounts[0],
+      value: web3.toWei("0.02", "ether")
+    });
+    const acceptedAnswerId = await bounty.acceptedAnswerId();
+    assert.ok(acceptedAnswerId);
+  });
 });
